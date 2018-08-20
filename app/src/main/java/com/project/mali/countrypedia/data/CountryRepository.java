@@ -1,10 +1,12 @@
 package com.project.mali.countrypedia.data;
 
-import com.project.mali.countrypedia.data.local.CountryCacheMangaer;
+import android.util.Log;
+
+import com.project.mali.countrypedia.CountryApplication;
 import com.project.mali.countrypedia.data.local.ICountryCacheManager;
+import com.project.mali.countrypedia.data.local.database.AppDatabase;
 import com.project.mali.countrypedia.data.local.entity.CountryEntity;
-import com.project.mali.countrypedia.data.remote.CountriesApi;
-import com.project.mali.countrypedia.data.remote.CountryRemoteDataSource;
+
 
 import java.util.List;
 
@@ -24,13 +26,18 @@ public class CountryRepository implements CountryDataSource {
 
     @Override
     public Single<List<CountryEntity>> getCountryList() {
-
+        if (CountryApplication.getInstance().isNetworkConnected()) {
             return countryRemoteDataSource.getCountryList().doAfterSuccess(new Consumer<List<CountryEntity>>() {
                 @Override
                 public void accept(List<CountryEntity> countryEntityList) throws Exception {
                     countryCacheMangaer.insertAllCountry(countryEntityList);
                 }
             });
+
+        } else {
+
+            return countryCacheMangaer.getCountryList();
         }
 
+    }
 }
