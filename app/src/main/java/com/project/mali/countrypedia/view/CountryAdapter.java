@@ -1,6 +1,8 @@
 package com.project.mali.countrypedia.view;
 
 import android.content.Context;
+import android.graphics.drawable.PictureDrawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
 import com.project.mali.countrypedia.R;
 import com.project.mali.countrypedia.data.local.entity.CountryEntity;
-
+import com.project.mali.countrypedia.util.glidesvg.SvgSoftwareLayerSetter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +24,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
     private Context context;
     private OnCountryClick onCountryClick;
     private List<CountryEntity> countryEntitiesList = new ArrayList<>();
+    private RequestBuilder<PictureDrawable> requestBuilder;
 
     @Override
     public CountryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,6 +44,16 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         if (item.getName() != null) {
             holder.countryName.setText(item.getName());
             holder.countryCapital.setText(item.getCapital());
+
+            requestBuilder = Glide.with(context)
+                    .as(PictureDrawable.class)
+                    .listener(new SvgSoftwareLayerSetter());
+
+            Uri uri = Uri.parse(item.getFlag());
+            requestBuilder.load(uri)
+                    .into(holder.imageView);
+
+
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +82,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
             super(itemView);
             countryName = itemView.findViewById(R.id.countryList_name);
             countryCapital = itemView.findViewById(R.id.countryList_capital);
+            imageView = itemView.findViewById(R.id.countryList_image);
 
         }
     }
