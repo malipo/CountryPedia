@@ -42,9 +42,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
         if (item.getName() != null) {
             holder.countryName.setText(item.getName());
             holder.countryCapital.setText(item.getCapital());
-            Glide.with(context)
-                    .load(item.getFlag())
-                    .into(holder.imageView);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +70,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.CountryV
             super(itemView);
             countryName = itemView.findViewById(R.id.countryList_name);
             countryCapital = itemView.findViewById(R.id.countryList_capital);
-            imageView = itemView.findViewById(R.id.countryList_image);
 
         }
     }
